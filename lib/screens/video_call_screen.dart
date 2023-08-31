@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:zoom_clone/resources/auth_methods.dart';
+import 'package:zoom_clone/resources/jitsi_meet_methods.dart';
 import 'package:zoom_clone/utilis/colors.dart';
 
 class VideoCallScreen extends StatefulWidget {
@@ -19,7 +22,18 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     nameController = TextEditingController(text:_authMethods.user.displayName );
     super.initState();
   }
-  _joinMeeting(){}
+  final JitsiMeetMethods _jitsiMeetMethods = JitsiMeetMethods();
+
+  createNewMeeting() async {
+    var random = Random();
+    String roomName = (random.nextInt(10000000) + 10000000).toString();
+    _jitsiMeetMethods.createMeeting(
+        roomName: roomName, isAudioMuted: true, isVideoMuted: true);
+  }
+
+  joinMeeting(BuildContext context) {
+    Navigator.pushNamed(context, '/video-call');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +81,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             ),
             const SizedBox(height: 20,),
             InkWell(
-              onTap: _joinMeeting,
+              onTap:()=>joinMeeting(context),
               child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Text('Join',style: TextStyle(
